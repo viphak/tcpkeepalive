@@ -21,10 +21,6 @@ func setCount(fd uintptr, n int) error {
 
 func setInterval(fd uintptr, d time.Duration) error {
 	// # from https://golang.org/src/net/tcpsockopt_darwin.go
-	// d += (time.Second - time.Nanosecond)
-	// secs := int(d.Seconds())
-	// return os.NewSyscallError("setsockopt", syscall.SetsockoptInt(int(fd), syscall.IPPROTO_TCP, sysTCP_KEEPINTVL, secs))
-	// The kernel expects seconds so round to next highest second.
 	d += (time.Second - time.Nanosecond)
 	secs := int(d.Seconds())
 	switch err := syscall.SetsockoptInt(int(fd), syscall.IPPROTO_TCP, sysTCP_KEEPINTVL, secs); err {
