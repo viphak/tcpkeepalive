@@ -6,13 +6,14 @@ import (
 	"time"
 )
 
-const _TCP_KEEPALIVE = syscall.TCP_KEEPALIVE
+const _TCP_KEEPIDLE = syscall.TCP_KEEPALIVE
 const _TCP_KEEPINTVL = 0x101 /* interval between keepalives */
 const _TCP_KEEPCNT = 0x102   /* number of keepalives before close */
 
 func setIdle(fd uintptr, d time.Duration) error {
+	// All versions of darwin support this
 	secs := durToSecs(d)
-	err := syscall.SetsockoptInt(int(fd), syscall.IPPROTO_TCP, _TCP_KEEPALIVE, secs)
+	err := syscall.SetsockoptInt(int(fd), syscall.IPPROTO_TCP, _TCP_KEEPIDLE, secs)
 	return os.NewSyscallError("setsockopt", err)
 }
 
